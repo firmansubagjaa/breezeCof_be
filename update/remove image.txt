@@ -1,0 +1,20 @@
+ISTIRAHAT
+menit 18:26
+menambahkan for
+
+// for (let index = 0; index < result.rowCount; index++) {
+            //   db.query(`SELECT id_images, name, filename FROM product_images WHERE id_product=$1`, [result.rows[index].id]).then((res) => {
+            //     return resolve({
+            //       ...result.rows[index],
+            //       images: res.rows,
+            //     });
+            //   });
+            // }
+            // result.rows.map((item, index) => {
+            //   db.query(`SELECT id_images, name, filename FROM product_images WHERE id_product=$1`, [item.id]).then((res) => {
+            //     return resolve({
+            //       ...item,
+            //       images: res.rows,
+            //     });
+            //   });
+            // });

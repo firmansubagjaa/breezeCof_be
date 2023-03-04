@@ -1,0 +1,36 @@
+// formUpload.single()
+// console.log(req.file); // => untuk single
+
+
+video kedua
+2:38:34
+
+ISTIRAHAT
+multiplequery
+
+RETURNING sql => mengembalikan parameter, contoh id
+UNION sql => penggabungan dua query
+              - tidak cocok untuk select dan untuk insert
+
+// cara query
+    // db.query(`SELECT * from products ${queryParams.search && `WHERE title LIKE '%${queryParams.search}%'`}`, (err, result) => {
+
+    //cara kedua
+    // db.query(`SELECT * from products ${queryParams.search || queryParams.cat ? `WHERE title LIKE '%${queryParams.search}%' OR category LIKE '%${queryParams.cat}%'` : ""}`, (err, result) => {
+
+// formUplaod.array()
+// console.log(req.files); // untuk multiple
+
+berarti kita mau bikin product yang banyak images, itu gimana?
+1. kita bikin 2-3 column untuk
+2. bikin table khusus untuk products_images (RECOMENDED)
+  caranya :
+  - membuat column id_image, id_product, name, alt_name, filename
+  - ketika get product, maka akan join table 
+
+inherintance = mewarisi sebuah column
+
+
+TERBARU
+1.SQL
+2.Logic
