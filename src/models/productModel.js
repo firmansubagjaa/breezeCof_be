@@ -2,21 +2,31 @@ const db = require("../../helper/connection");
 const { v4: uuidv4 } = require("uuid");
 
 const productModel = {
+  whereClause: (search, cat) => {
+    if (search && cat) {
+      return `WHERE title ILIKE '%${search}%' AND category  ILIKE '%${cat}%'`
+    } else if (search || cat) {
+      return `WHERE title ILIKE '%${search}%' OR category ILIKE '%${cat}%'`
+    } else {
+      return ""
+    }
+  },
+
   //GET
   get: function (queryParams) {
-    console.log(queryParams);
+    // console.log(queryParams);
     return new Promise((resolve, reject) => {
       // const { sortBy, limit, offset, page } = queryParams;
-      const { sortBy = "ASC", page = 1, limit = 15, search = "" } = queryParams;
+      const { search, cat, sortBy = "ASC", page = 1, limit = 15, } = queryParams;
       //query
 
       db.query(
-        `SELECT products.id, products.title, products.price, products.category,  
+        `SELECT products.id, products.title, products.price, products.category, products.description, 
         json_agg(row_to_json(product_images)) images
         FROM products
         INNER JOIN product_images 
         ON products.id=product_images.id_product
-        ${search && `AND title ILIKE '%${search}%'`}
+        ${this.whereClause(search, cat)}
         GROUP BY products.id ORDER BY title ${sortBy} LIMIT ${limit} OFFSET (${page} - 1) * ${limit}`,
         (err, result) => {
           if (err) {
@@ -34,7 +44,7 @@ const productModel = {
     return new Promise((resolve, reject) => {
       db.query(
         `
-      SELECT products.id, products.title, products.price, products.category,  
+      SELECT products.id, products.title, products.price, products.category, products.description,
         json_agg(row_to_json(product_images)) images
         FROM products
         INNER JOIN product_images 
@@ -54,7 +64,7 @@ const productModel = {
   },
 
   //POST
-  add: ({ title, img, price, category, file }) => {
+  add: ({ title, img, price, category, file, description }) => {
     // console.log(file);
     // const uuidProduct = uuidv4();
     return new Promise((resolve, reject) => {
@@ -62,7 +72,7 @@ const productModel = {
       if (title == "" && img == "" && price == "" && category == "") return reject("data harus lengkap");
 
       //query 1
-      db.query(`INSERT INTO products (id, title, img, price, category) VALUES ('${uuidv4()}', '${title}', '${img}', '${price}', '${category}') RETURNING id`, (err, result) => {
+      db.query(`INSERT INTO products (id, title, img, price, category, description) VALUES ('${uuidv4()}', '${title}', '${img}', '${price}', '${category}', '${description}') RETURNING id`, (err, result) => {
         // console.log(result.rows[0].id);
 
         //check
@@ -73,7 +83,7 @@ const productModel = {
           for (let index = 0; index < file.length; index++) {
             db.query(`INSERT INTO product_images (id_images, id_product, name, filename) VALUES('${uuidv4()}', '${result.rows[0].id}', '${title}', '${file[index].filename}')`);
           }
-          return resolve({ title, img, price, category, files: file });
+          return resolve({ title, img, price, category, description, files: file });
         }
       });
     });
