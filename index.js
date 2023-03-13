@@ -10,12 +10,12 @@ require("dotenv").config();
 //menghubungkan connection.js
 // const db = require("./helper/connection");
 const router = require("./src/routes/index");
+app.use(cors());
 // const { v4: uuidv4 } = require("uuid");
 app.use(urlencoded({ extended: true }));
 //menerima json
 app.use(json());
 //menerima cors
-app.use(cors({ origin: "*" }));
 //menerima router
 app.use(express.static("public"));
 
